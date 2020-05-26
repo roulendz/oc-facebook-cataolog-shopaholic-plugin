@@ -75,8 +75,10 @@ class GenerateXML
         $this->obXMLWriter->openMemory();
         $this->obXMLWriter->setIndent(1);
         $this->obXMLWriter->startDocument('1.0', 'UTF-8');
-        $this->obXMLWriter->startElement('yml_catalog');
-        $this->obXMLWriter->writeAttribute('date', Argon::now()->format('Y-m-d h:i'));
+        $this->obXMLWriter->startElement('rss');
+        $this->obXMLWriter->writeAttribute('version', '2.0');
+        $this->obXMLWriter->writeAttribute('xmlns:g', 'http://base.google.com/ns/1.0');
+        $this->obXMLWriter->writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
     }
 
     /**
@@ -85,7 +87,7 @@ class GenerateXML
     protected function setContent()
     {
         // <shop>
-        $this->obXMLWriter->startElement('shop');
+        $this->obXMLWriter->startElement('channel');
         $this->setShopElement();
         $this->setOffersElement();
         // </shop>
@@ -100,59 +102,63 @@ class GenerateXML
         $arCurrencyList = array_get($this->arShopData, 'currencies', []);
         $arCategoryList = array_get($this->arShopData, 'categories', []);
 
-        // <name>
-        $this->obXMLWriter->writeElement('name', array_get($this->arShopData, 'name'));
-        // </name>
+        $this->obXMLWriter->writeElement('atom:link', array_get($this->arShopData, 'name'));
+        $this->obXMLWriter->writeAttribute('href', 'https://www.mydealsshop.foo/pages/test-feed');
+        $this->obXMLWriter->writeAttribute('rel', 'self');
+        $this->obXMLWriter->writeAttribute('type', 'application/rss+xml');
+        // <title>
+        $this->obXMLWriter->writeElement('title', array_get($this->arShopData, 'name'));
+        // </title>
         // <company>
-        $this->obXMLWriter->writeElement('company', array_get($this->arShopData, 'company'));
+        // $this->obXMLWriter->writeElement('company', array_get($this->arShopData, 'company'));
         // </company>
-        // <url>
-        $this->obXMLWriter->writeElement('url', array_get($this->arShopData, 'url'));
-        // </url>
+        // <link>
+        $this->obXMLWriter->writeElement('link', array_get($this->arShopData, 'url'));
+        // </link>
         // <platform>
-        $this->obXMLWriter->writeElement('platform', array_get($this->arShopData, 'platform'));
+        // $this->obXMLWriter->writeElement('platform', array_get($this->arShopData, 'platform'));
         // </platform>
-        // <agency>
-        $this->obXMLWriter->writeElement('agency', array_get($this->arShopData, 'agency'));
-        // </agency>
+        // <description>
+        $this->obXMLWriter->writeElement('description', array_get($this->arShopData, 'agency'));
+        // </description>
         // <email_agency>
-        $this->obXMLWriter->writeElement('email', array_get($this->arShopData, 'email_agency'));
+        // $this->obXMLWriter->writeElement('email', array_get($this->arShopData, 'email_agency'));
         // </email_agency>
 
-        if (!empty($arCurrencyList)) {
-            // <currencies>
-            $this->obXMLWriter->startElement('currencies');
-            // </currencies>
-            foreach ($arCurrencyList as $arCurrency) {
-                // <currency id='' rate=''>
-                $this->obXMLWriter->startElement('currency');
-                $this->obXMLWriter->writeAttribute('id', array_get($arCurrency, 'id'));
-                $this->obXMLWriter->writeAttribute('rate', array_get($arCurrency, 'rate'));
-                $this->obXMLWriter->endElement();
-                // </currency>
-            }
-            // </currencies>
-            $this->obXMLWriter->endElement();
-        }
+        // if (!empty($arCurrencyList)) {
+        //     // <currencies>
+        //     $this->obXMLWriter->startElement('currencies');
+        //     // </currencies>
+        //     foreach ($arCurrencyList as $arCurrency) {
+        //         // <currency id='' rate=''>
+        //         $this->obXMLWriter->startElement('currency');
+        //         $this->obXMLWriter->writeAttribute('id', array_get($arCurrency, 'id'));
+        //         $this->obXMLWriter->writeAttribute('rate', array_get($arCurrency, 'rate'));
+        //         $this->obXMLWriter->endElement();
+        //         // </currency>
+        //     }
+        //     // </currencies>
+        //     $this->obXMLWriter->endElement();
+        // }
 
-        if (!empty($arCategoryList)) {
-            // <categories>
-            $this->obXMLWriter->startElement('categories');
-            foreach ($arCategoryList as $arCategory) {
-                $iParentId = array_get($arCategory, 'parent_id');
-                // <category id='' parentId=''>
-                $this->obXMLWriter->startElement('category');
-                $this->obXMLWriter->writeAttribute('id', array_get($arCategory, 'id'));
-                if (!empty($iParentId)) {
-                    $this->obXMLWriter->writeAttribute('parentId', array_get($arCategory, 'parent_id'));
-                }
-                $this->obXMLWriter->text(array_get($arCategory, 'name'));
-                $this->obXMLWriter->endElement();
-                // </category>
-            }
-            // </categories>
-            $this->obXMLWriter->endElement();
-        }
+        // if (!empty($arCategoryList)) {
+        //     // <categories>
+        //     $this->obXMLWriter->startElement('categories');
+        //     foreach ($arCategoryList as $arCategory) {
+        //         $iParentId = array_get($arCategory, 'parent_id');
+        //         // <category id='' parentId=''>
+        //         $this->obXMLWriter->startElement('category');
+        //         $this->obXMLWriter->writeAttribute('id', array_get($arCategory, 'id'));
+        //         if (!empty($iParentId)) {
+        //             $this->obXMLWriter->writeAttribute('parentId', array_get($arCategory, 'parent_id'));
+        //         }
+        //         $this->obXMLWriter->text(array_get($arCategory, 'name'));
+        //         $this->obXMLWriter->endElement();
+        //         // </category>
+        //     }
+        //     // </categories>
+        //     $this->obXMLWriter->endElement();
+        // }
     }
 
     /**
@@ -161,7 +167,7 @@ class GenerateXML
     protected function setOffersElement()
     {
         // <offers>
-        $this->obXMLWriter->startElement('offers');
+        // $this->obXMLWriter->startElement('offers');
         foreach ($this->arOffersData as $arOffer) {
             $this->setOfferElement($arOffer);
         }
@@ -177,63 +183,97 @@ class GenerateXML
     protected function setOfferElement($arOffer)
     {
         $fOldPrice      = array_get($arOffer, 'old_price');
+        $fManualOldPrice = array_get($arOffer, 'manual_sales_price');
         $sBrandName     = array_get($arOffer, 'brand_name');
         $arImageList    = array_get($arOffer, 'images', []);
         $arPropertyList = array_get($arOffer, 'properties', []);
 
         // <offer id='' bid=''>
-        $this->obXMLWriter->startElement('offer');
-        $this->obXMLWriter->writeAttribute('id', array_get($arOffer, 'id'));
-        $this->obXMLWriter->writeAttribute('bid', array_get($arOffer, 'rate'));
-        // <name>
-        $this->obXMLWriter->writeElement('name', array_get($arOffer, 'name'));
-        // </name>
-        // <description>
-        $this->obXMLWriter->writeElement('description', array_get($arOffer, 'description'));
-        // </description>
-        // <url>
-        $this->obXMLWriter->writeElement('url', array_get($arOffer, 'url'));
-        // </url>
-        // <enable_auto_discounts>
-        $this->obXMLWriter->writeElement('enable_auto_discounts', (int) array_get($arOffer, 'auto_discounts'));
-        // </enable_auto_discounts>
-        if (!empty($sBrandName)) {
-            // <vendor>
-            $this->obXMLWriter->writeElement('vendor', $sBrandName);
-            // </vendor>
-        }
+        $this->obXMLWriter->startElement('item');
+        // $this->obXMLWriter->writeAttribute('id', array_get($arOffer, 'id'));
+        // $this->obXMLWriter->writeAttribute('bid', array_get($arOffer, 'rate'));
+        // </g:id>
+        $this->obXMLWriter->writeElement('g:id', array_get($arOffer, 'id'));
+        // </g:id>
+        // <g:title>
+        $this->obXMLWriter->writeElement('g:title', array_get($arOffer, 'name'));
+        // </g:title>
+        // <g:description>
+        $this->obXMLWriter->writeElement('g:description', array_get($arOffer, 'description'));
+        // </g:description>
+        // <g:link>
+        $this->obXMLWriter->writeElement('g:link', array_get($arOffer, 'url'));
+        // </g:link>
+        // <g:image_link>
+        $this->obXMLWriter->writeElement('g:image_link', array_get($arOffer, 'image'));
+        // </g:image_link>
+        // <g:brand>
+        $this->obXMLWriter->writeElement('g:brand', 'NAI_S cosmetics');
+        // </g:brand>
+
+        // <g:condition>
+        $this->obXMLWriter->writeElement('g:condition', 'new');
+        // </g:condition>
+
+        // <g:availability>
+        // $this->obXMLWriter->writeElement('g:availability', 'in stock');
+        $this->obXMLWriter->writeElement('g:availability', array_get($arOffer, 'availability'));
+        $this->obXMLWriter->writeElement('g:inventory', array_get($arOffer, 'quantity'));
+        // </g:availability>
+        
         // <price>
-        $this->obXMLWriter->writeElement('price', array_get($arOffer, 'price'));
         // </price>
-        if (!empty($fOldPrice)) {
-            // <oldprice>
-            $this->obXMLWriter->writeElement('oldprice', $fOldPrice);
-            // </oldprice>
+        if (!empty($fManualOldPrice)) {
+            // <price>
+            $this->obXMLWriter->writeElement('price', $fManualOldPrice . ' ' . array_get($arOffer, 'currency_id'));
+            // </price>
+            $this->obXMLWriter->writeElement('g:sale_price', array_get($arOffer, 'price') . ' ' . array_get($arOffer, 'currency_id'));
+        } else {
+            $this->obXMLWriter->writeElement('g:price', array_get($arOffer, 'price') . ' ' . array_get($arOffer, 'currency_id'));
         }
         // <currencyId>
-        $this->obXMLWriter->writeElement('currencyId', array_get($arOffer, 'currency_id'));
+        // $this->obXMLWriter->writeElement('currencyId', array_get($arOffer, 'currency_id'));
         // </currencyId>
         // <categoryId>
-        $this->obXMLWriter->writeElement('categoryId', array_get($arOffer, 'category_id'));
+        // $this->obXMLWriter->writeElement('categoryId', array_get($arOffer, 'category_id'));
         // </categoryId>
+
         if (!empty($arImageList)) {
             foreach ($arImageList as $sImageUrl) {
                 // <picture>
-                $this->obXMLWriter->writeElement('picture', $sImageUrl);
+                $this->obXMLWriter->writeElement('additional_image_link', $sImageUrl);
                 // </picture>
             }
         }
-        if (!empty($arPropertyList)) {
-            foreach ($arPropertyList as $arProperty) {
-                // <param name='' unit=''>
-                $this->obXMLWriter->startElement('param');
-                $this->obXMLWriter->writeAttribute('name', array_get($arProperty, 'name'));
-                $this->obXMLWriter->writeAttribute('unit', array_get($arProperty, 'measure'));
-                $this->obXMLWriter->text(array_get($arProperty, 'value'));
-                $this->obXMLWriter->endElement();
-                // </param>
-            }
-        }
+
+        // <g:shipping>
+        $this->obXMLWriter->startElement('g:shipping');
+        $this->obXMLWriter->writeElement('g:country', 'LV');
+        $this->obXMLWriter->writeElement('g:service', 'Omniva');
+        $this->obXMLWriter->writeElement('g:price', '1.99 EUR');
+        $this->obXMLWriter->endElement();
+        // </g:shipping>
+
+        // <g:google_product_category>
+        // $this->obXMLWriter->writeElement('g:google_product_category', 'Health & Beauty > Personal Care > Cosmetics > Cosmetic Tools	Nail Tools');
+        $this->obXMLWriter->writeElement('g:google_product_category', '2975');
+        // </g:google_product_category>
+
+        // <g:custom_label_0>
+        $this->obXMLWriter->writeElement('g:custom_label_0', 'Made in Latvia, EU');
+        // </g:custom_label_0>
+
+        // if (!empty($arPropertyList)) {
+        //     foreach ($arPropertyList as $arProperty) {
+        //         // <param name='' unit=''>
+        //         $this->obXMLWriter->startElement('param');
+        //         $this->obXMLWriter->writeAttribute('name', array_get($arProperty, 'name'));
+        //         $this->obXMLWriter->writeAttribute('unit', array_get($arProperty, 'measure'));
+        //         $this->obXMLWriter->text(array_get($arProperty, 'value'));
+        //         $this->obXMLWriter->endElement();
+        //         // </param>
+        //     }
+        // }
         // </offer>
         $this->obXMLWriter->endElement();
     }

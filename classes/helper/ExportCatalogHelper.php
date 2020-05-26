@@ -213,18 +213,23 @@ class ExportCatalogHelper
     {
         $arOfferData = [
             'name'           => $obOffer->name,
+            'ean'            => $obProduct->code,
             'rate'           => YandexMarketSettings::getValue('offers_rate', ''),
             'url'            => $obProduct->getPageUrl(),
-            'id'             => $obOffer->id,
+            'id'             => 'SKU-'.$obProduct->id.'-'.$obOffer->id,
             'price'          => $obOffer->price_value,
+            'quantity'       => $obOffer->quantity,
+            'availability'   => $obOffer->quantity > 0 ? 'in stock' : 'out of stock',
             'currency_id'    => !empty($this->obDefaultCurrency) ? $this->obDefaultCurrency->code : '',
             'category_id'    => $obProduct->category_id,
+            'image'         => $obOffer->preview_image->path ? $obOffer->preview_image->path : $obProduct->preview_image->path ? $obProduct->preview_image->path : 'no image',
             'images'         => $this->getOfferImages($obOffer, $obProduct),
             'properties'     => $this->getOfferProperties($obOffer),
             'auto_discounts' => YandexMarketSettings::getValue('field_enable_auto_discounts', false),
             'description'    => $obOffer->description ? $obOffer->description : $obProduct->description,
             'brand_name'     => $this->getBrandName($obProduct),
             'old_price'      => $this->getOfferOldPrice($obOffer),
+            'manual_sales_price'      => $obOffer->old_price_value,
         ];
 
         $arEventData = Event::fire(self::EVENT_YANDEX_MARKET_OFFER_DATA, [$arOfferData]);
