@@ -6,13 +6,13 @@ use System\Classes\PluginBase;
 // Command
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Console\CatalogExportForYandexMarket;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Console\CatalogExportForFacebookCatalog;
-
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Console\CatalogExportForKurPirktCatalog;
 // Offer event
-use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\ExtendOfferFieldsHandler;
-use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\OfferModelHandler;
+// use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\ExtendOfferFieldsHandler;
+// use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\OfferModelHandler;
 // Product event
-use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product\ExtendProductFieldsHandler;
-use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product\ProductModelHandler;
+// use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product\ExtendProductFieldsHandler;
+// use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product\ProductModelHandler;
 
 /**
  * Class Plugin
@@ -62,8 +62,10 @@ class Plugin extends PluginBase
      */
     public function register()
     {
-        $this->registerConsoleCommand('shopaholic:catalog_export.facebook_catalog', CatalogExportForFacebookCatalog::class);
         $this->registerConsoleCommand('shopaholic:catalog_export.yandex_market', CatalogExportForYandexMarket::class);
+        $this->registerConsoleCommand('shopaholic:catalog_export.facebook_catalog', CatalogExportForFacebookCatalog::class);
+        $this->registerConsoleCommand('shopaholic:catalog_export.kurpirkt_catalog', CatalogExportForKurPirktCatalog::class);
+        
     }
 
     /**

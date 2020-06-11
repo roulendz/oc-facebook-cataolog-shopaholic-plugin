@@ -23,6 +23,17 @@
     >
         <?= e(trans('logingrupa.facebookcatalogshopaholic::lang.button.export_catalog_to_xml', [ 'name' => 'Facebook.Catalog' ])) ?>
     </button>
+
+    <button
+            type="button"
+            data-request="onGenerateXMLFileKurPirktCatalog"
+            class="btn btn-primary "
+            data-request-update="download: '.download-btn-yandex-market'"
+            data-stripe-load-indicator
+            data-request-confirm="<?= e(trans('logingrupa.facebookcatalogshopaholic::lang.message.update_catalog_to_xml_confirm', [ 'name' => 'KurPirkt.Catalog' ])) ?>"
+    >
+        <?= e(trans('logingrupa.facebookcatalogshopaholic::lang.button.export_catalog_to_xml', [ 'name' => 'KurPirkt.Catalog' ])) ?>
+    </button>
     <div class="download-btn-yandex-market">
         <?= $this->makePartial('download') ?>
     </div>

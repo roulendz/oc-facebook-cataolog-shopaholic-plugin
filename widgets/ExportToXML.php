@@ -5,8 +5,10 @@ use Storage;
 use Backend\Classes\ReportWidgetBase;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogHelper;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogFacebookHelper;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogKurPirktHelper;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXML;
 use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXMLForFacebookCatalog;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXMLForKurPirktCatalog;
 
 /**
  * Class ExportToXML
@@ -52,6 +54,16 @@ class ExportToXML extends ReportWidgetBase
         Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', [ 'name' => 'Facebook.Catalog' ]));
 
         $this->vars['sFileUrl'] = url('/').'/storage/'.GenerateXMLForFacebookCatalog::getFilePath();
+    }
+
+    public function onGenerateXMLFileKurPirktCatalog()
+    {
+        $obDataCollection = new ExportCatalogKurPirktHelper();
+        $obDataCollection->run();
+        // \Artisan::call('shopaholic:catalog_export.facebook_catalog');
+        Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', [ 'name' => 'Facebook.Catalog' ]));
+
+        $this->vars['sFileUrl'] = url('/').'/storage/'.GenerateXMLForKurPirktCatalog::getFilePath();
     }
 
     /**
