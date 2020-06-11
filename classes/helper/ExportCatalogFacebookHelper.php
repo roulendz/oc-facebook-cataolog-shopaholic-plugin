@@ -15,15 +15,16 @@ use Lovata\PropertiesShopaholic\Classes\Item\PropertyValueItem;
 use LoginGrupa\FacebookCatalogShopaholic\Models\YandexMarketSettings;
 
 /**
- * Class ExportCatalogHelper
+ * Class ExportCatalogFacebookHelper
  *
- * @package Lovata\YandexMarketShopaholic\Classes\Helper
+ * @package LoginGrupa\FacebookCatalogShopaholic\Classes\Helper
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
-class ExportCatalogHelper
+class ExportCatalogFacebookHelper
 {
-    const EVENT_YANDEX_MARKET_SHOP_DATA = 'shopaholic.yandex.export.shop.data';
-    const EVENT_YANDEX_MARKET_OFFER_DATA = 'shopaholic.yandex.export.offer.data';
+    const EVENT_FACEBOOK_CATALOG_SHOP_DATA = 'shopaholic.Facebook.Catalog.shop.data';
+    const EVENT_FACEBOOK_CATALOG_OFFER_DATA = 'shopaholic.Facebook.Catalog.offer.data';
+    const EVENT_FACEBOOK_CATALOG_PRODUCT_DATA = 'shopaholic.Facebook.Catalog.product.data';
 
     /**
      * @var array
@@ -81,6 +82,7 @@ class ExportCatalogHelper
     protected $arData = [
         'shop'   => [],
         'offers' => [],
+        'products' => [],
     ];
 
     /**
@@ -96,10 +98,11 @@ class ExportCatalogHelper
         //Prepare data
         $this->initShopData();
         $this->initProductListData();
+        // dd($this->arData['products']);
 
         //Generate XML file
-        $obGenerateXML = new GenerateXML();
-        $obGenerateXML->generate($this->arData);
+        $obGenerateXMLForFacebookCatalog = new GenerateXMLForFacebookCatalog();
+        $obGenerateXMLForFacebookCatalog->generate($this->arData);
     }
 
     /**
@@ -115,10 +118,10 @@ class ExportCatalogHelper
         array_set($this->arData, 'shop.email_agency', YandexMarketSettings::getValue('email_agency'));
         array_set($this->arData, 'shop.currencies', $this->getCurrencyList());
 
-        $this->initCategoryList();
+        // $this->initCategoryList();
 
         $arShopData = array_get($this->arData, 'shop');
-        $arEventData = Event::fire(self::EVENT_YANDEX_MARKET_SHOP_DATA, [$arShopData]);
+        $arEventData = Event::fire(self::EVENT_FACEBOOK_CATALOG_SHOP_DATA, [$arShopData]);
         if (empty($arEventData)) {
             return;
         }
@@ -135,38 +138,6 @@ class ExportCatalogHelper
     }
 
     /**
-     * Init category list
-     */
-    protected function initCategoryList()
-    {
-        $obCategoryList = CategoryCollection::make()->active();
-        if ($obCategoryList->isEmpty()) {
-            return;
-        }
-        
-        $arCategoryList = [];
-        /** @var CategoryItem $obCategoryItem */
-        foreach ($obCategoryList as $obCategoryItem) {
-            if ($obCategoryItem->product_count == 0) {
-                continue;
-            }
-
-            $arCategoryData = [
-                'id'   => $obCategoryItem->id,
-                'name' => $obCategoryItem->name,
-            ];
-
-            if ($obCategoryItem->parent->isNotEmpty()) {
-                $arCategoryData['parent_id'] = $obCategoryItem->parent->id;
-            }
-
-            $arCategoryList[] = $arCategoryData;
-        }
-
-        array_set($this->arData, 'shop.categories', $arCategoryList);
-    }
-
-    /**
      * Init product list data
      */
     protected function initProductListData()
@@ -174,6 +145,10 @@ class ExportCatalogHelper
         $obProductList = ProductCollection::make()->active();
         if ($obProductList->isEmpty()) {
             return;
+        }
+
+        foreach ($obProductList as $obProduct) {
+            $this->initProduct($obProduct);
         }
 
         /** @var ProductItem $obProduct */
@@ -197,9 +172,61 @@ class ExportCatalogHelper
         if ($obOfferList->isEmpty()) {
             return;
         }
+
         foreach ($obOfferList as $obOffer) {
-            $this->initOffer($obOffer, $obProduct);
+            if ($obProduct->offer->count() > 1) {
+                $this->initOffer($obOffer, $obProduct);
+            }
         }
+    }
+
+    /**
+     * Init offer
+     *
+     * @param OfferItem   $obOffer
+     * @param ProductItem $obProduct
+     */
+    protected function initProduct($obProduct)
+    {
+        $arProductData = [
+            'name'           => $obProduct->name,
+            'ean'            => $obProduct->code,
+            // 'rate'           => YandexMarketSettings::getValue('offers_rate', ''),
+            'url'            => $obProduct->getPageUrl(),
+            'offerId'        => 'SKU-'.$obProduct->id,
+            'productId'      => 'SKU-'.$obProduct->id,
+            'offerCount'     => $obProduct->offer->count(),
+            // 'id'             => 'SKU-'.$obProduct->id,
+            'price'          => $obProduct->offer->first()->price_value,
+            'inventory'      => $obProduct->offer->first()->quantity,
+            'visibility'     => $obProduct->offer->first()->quantity > 0 ? 'published' : 'hidden',
+            'availability'   => $obProduct->offer->first()->quantity > 0 ? 'in stock' : 'out of stock',
+            'currency_id'    => !empty($this->obDefaultCurrency) ? $this->obDefaultCurrency->code : '',
+            // 'category_id'    => $obProduct->category_id,
+            // 'color'          => preg_match('/(?<=\().+?(?=\))/', $obOffer->name, $output_array) ? $output_array[0] : '',
+            // 'offerImage'     => !is_null($obOffer->preview_image) ? $obOffer->preview_image->path : null,
+            'productImage'   => !is_null($obProduct->preview_image) ? $obProduct->preview_image->path : null,
+            'images'         => $this->getOfferImages($obProduct->offer->first(), $obProduct),
+            // 'properties'     => $this->getOfferProperties($obOffer),
+            // 'auto_discounts' => YandexMarketSettings::getValue('field_enable_auto_discounts', false),
+            'description'    => $obProduct->description ? preg_replace('/<[^>]*>/', '', $obProduct->description) : 'NAI_S cosmetics profesionālais produktu klāsts',
+            // 'brand_name'     => $this->getBrandName($obProduct),
+            // 'old_price'      => $this->getOfferOldPrice($obOffer),
+            // 'manual_sales_price'=> $obOffer->old_price > 1 ? $obOffer->old_price_value : '',
+        ];
+
+        $arEventData = Event::fire(self::EVENT_FACEBOOK_CATALOG_PRODUCT_DATA, [$arProductData]);
+        if (!empty($arEventData)) {
+            foreach ($arEventData as $arEventProductData) {
+                if (empty($arEventProductData) || !is_array($arEventProductData)) {
+                    continue;
+                }
+
+                $arProductData = array_merge($arProductData, $arEventProductData);
+            }
+        }
+
+        $this->arData['offers'][] = $arProductData;
     }
 
     /**
@@ -210,35 +237,47 @@ class ExportCatalogHelper
      */
     protected function initOffer($obOffer, $obProduct)
     {
-        
         $arOfferData = [
             'name'           => $obOffer->name,
-            'rate'           => YandexMarketSettings::getValue('offers_rate', ''),
-            'url'            => $obProduct->getPageUrl(),
+            'ean'            => $obProduct->code,
+            // 'rate'           => YandexMarketSettings::getValue('offers_rate', ''),
+            'url'            => ($obProduct->offer->count() == 1) ? $obProduct->getPageUrl() : $obProduct->getPageUrl().'/'.$obOffer->id ,
+            'offerId'        => 'SKU-'.$obProduct->id.'-'.$obOffer->id,
+            'productId'      => 'SKU-'.$obProduct->id,
+            'offerCount'     => $obProduct->offer->count(),
             'id'             => $obOffer->id,
             'price'          => $obOffer->price_value,
+            'inventory'      => $obOffer->quantity,
+            'visibility'     => $obOffer->quantity > 0 ? 'published' : 'hidden',
+            'availability'   => $obOffer->quantity > 0 ? 'in stock' : 'out of stock',
             'currency_id'    => !empty($this->obDefaultCurrency) ? $this->obDefaultCurrency->code : '',
-            'category_id'    => $obProduct->category_id,
+            // 'category_id'    => $obProduct->category_id,
+            'color'          => preg_match('/(?<=\().+?(?=\))/', $obOffer->name, $output_array) ? $output_array[0] : '',
+            'offerImage'     => !is_null($obOffer->preview_image) ? $obOffer->preview_image->path : null,
+            'productImage'   => !is_null($obProduct->preview_image) ? $obProduct->preview_image->path : null,
             'images'         => $this->getOfferImages($obOffer, $obProduct),
-            'properties'     => $this->getOfferProperties($obOffer),
-            'auto_discounts' => YandexMarketSettings::getValue('field_enable_auto_discounts', false),
-            'description'    => $obOffer->description ? $obOffer->description : $obProduct->description,
-            'brand_name'     => $this->getBrandName($obProduct),
-            'old_price'      => $this->getOfferOldPrice($obOffer),
+            // 'properties'     => $this->getOfferProperties($obOffer),
+            // 'auto_discounts' => YandexMarketSettings::getValue('field_enable_auto_discounts', false),
+            'description'    => $obOffer->description ? preg_replace('/<[^>]*>/', '', $obOffer->description) : $obProduct->description ? preg_replace('/<[^>]*>/', '', $obProduct->description) : 'NAI_S cosmetics profesionālais produktu klāsts',
+            // 'brand_name'     => $this->getBrandName($obProduct),
+            // 'old_price'      => $this->getOfferOldPrice($obOffer),
+            'manual_sales_price'=> $obOffer->old_price > 1 ? $obOffer->old_price_value : '',
         ];
-        
-        $arEventData = Event::fire(self::EVENT_YANDEX_MARKET_OFFER_DATA, [$arOfferData]);
+
+        $arEventData = Event::fire(self::EVENT_FACEBOOK_CATALOG_OFFER_DATA, [$arOfferData]);
         if (!empty($arEventData)) {
             foreach ($arEventData as $arEventOfferData) {
                 if (empty($arEventOfferData) || !is_array($arEventOfferData)) {
                     continue;
                 }
 
-                $arOfferData = array_merge($arOfferData, $arEventOfferData);
+                $arOfferData = array_merge($arOfferData, $arEventOfferData, $arProductData);
             }
         }
 
         $this->arData['offers'][] = $arOfferData;
+
+        
     }
 
     /**

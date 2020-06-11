@@ -1,10 +1,10 @@
 plugin:
-    name: 'lovata.yandexmarketshopaholic::lang.plugin.name'
-    description: 'lovata.yandexmarketshopaholic::lang.plugin.description'
+    name: 'logingrupa.facebookcatalogshopaholic::lang.plugin.name'
+    description: 'logingrupa.facebookcatalogshopaholic::lang.plugin.description'
     author: Lovata
     icon: icon-upload
     homepage: ''
 permissions:
     shopaholic-menu-yandex-market-export:
-        label: 'lovata.yandexmarketshopaholic::lang.permission.yandexmarketsettings'
+        label: 'logingrupa.facebookcatalogshopaholic::lang.permission.yandexmarketsettings'
         tab: 'lovata.shopaholic::lang.tab.permissions'

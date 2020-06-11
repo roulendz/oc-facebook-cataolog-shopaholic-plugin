@@ -27,11 +27,11 @@ The complete official documentation of the plugin can be found [here](https://gi
 
 ## Configuration
 
-Go to `Settings` > `Export to Yandex.Market` to configure the plugin.
+Go to `Settings` > `Export to Facebook.Catalog` to configure the plugin.
 
 You can generate YML file this ways:
   
-1. using widget `Export catalog to Yandex.Market` on the October CMS dashboard
+1. using widget `Export to Facebook.Catalog` on the October CMS dashboard
 2. by runnung `shopaholic:catalog_export.yandex_market` artisan command
 
 The generic file can be found here `storage/app/media/yandex_market.xml` by default.

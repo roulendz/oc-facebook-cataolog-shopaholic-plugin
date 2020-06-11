@@ -1,4 +1,4 @@
-<?php namespace Lovata\YandexMarketShopaholic\Models;
+<?php namespace LoginGrupa\FacebookCatalogShopaholic\Models;
 
 use Lang;
 use System\Classes\PluginManager;
@@ -10,7 +10,7 @@ use Lovata\Shopaholic\Models\Currency;
 /**
  * Class YandexMarketSettings
  *
- * @package Lovata\YandexMarketShopaholic\Models
+ * @package LoginGrupa\FacebookCatalogShopaholic\Models
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  *
  * @mixin \October\Rain\Database\Builder
@@ -50,10 +50,10 @@ class YandexMarketSettings extends CommonSettings
      * @var array
      */
     public $attributeNames = [
-        'short_store_name'   => 'lovata.yandexmarketshopaholic::lang.field.short_store_name',
-        'full_company_name'  => 'lovata.yandexmarketshopaholic::lang.field.full_company_name',
-        'store_homepage_url' => 'lovata.yandexmarketshopaholic::lang.field.store_homepage_url',
-        'offers_rate'        => 'lovata.yandexmarketshopaholic::lang.field.offers_rate',
+        'short_store_name'   => 'logingrupa.facebookcatalogshopaholic::lang.field.short_store_name',
+        'full_company_name'  => 'logingrupa.facebookcatalogshopaholic::lang.field.full_company_name',
+        'store_homepage_url' => 'logingrupa.facebookcatalogshopaholic::lang.field.store_homepage_url',
+        'offers_rate'        => 'logingrupa.facebookcatalogshopaholic::lang.field.offers_rate',
     ];
 
     /**

@@ -1,15 +1,15 @@
-<?php namespace Lovata\YandexMarketShopaholic\Classes\Event\Product;
+<?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product;
 
 use Lovata\Toolbox\Classes\Event\AbstractBackendFieldHandler;
 
 use Lovata\Shopaholic\Models\Product;
 use Lovata\Shopaholic\Controllers\Products;
-use Lovata\YandexMarketShopaholic\Models\YandexMarketSettings;
+use LoginGrupa\FacebookCatalogShopaholic\Models\YandexMarketSettings;
 
 /**
  * Class ExtendProductFieldsHandler
  *
- * @package Lovata\YandexMarketShopaholic\Classes\Event\Product
+ * @package LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
 class ExtendProductFieldsHandler extends AbstractBackendFieldHandler
@@ -27,7 +27,7 @@ class ExtendProductFieldsHandler extends AbstractBackendFieldHandler
 
         $arFields = [
             'section_yandex_market' => [
-                'label' => 'lovata.yandexmarketshopaholic::lang.field.section_yandex_market',
+                'label' => 'logingrupa.facebookcatalogshopaholic::lang.field.section_yandex_market',
                 'tab'   => 'lovata.toolbox::lang.tab.images',
                 'type'  => 'section',
                 'span'  => 'full',

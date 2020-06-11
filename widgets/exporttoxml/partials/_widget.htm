@@ -1,18 +1,30 @@
 <div id="cachesizes" class="report-widget">
     <h3>
-        <?= e(trans('lovata.yandexmarketshopaholic::lang.widget.export_catalog_to_xml_for_yandex_market')) ?>
+        <?= e(trans('logingrupa.facebookcatalogshopaholic::lang.widget.export_catalog_to_xml_for_yandex_market')) ?>
     </h3>
     <button
             type="button"
             data-request="onGenerateXMLFileYandexMarket"
-            class="btn btn-primary icon-upload"
+            class="btn btn-primary "
             data-request-update="download: '.download-btn-yandex-market'"
             data-stripe-load-indicator
-            data-request-confirm="<?= e(trans('lovata.yandexmarketshopaholic::lang.message.update_catalog_to_xml_confirm')) ?>"
+            data-request-confirm="<?= e(trans('logingrupa.facebookcatalogshopaholic::lang.message.update_catalog_to_xml_confirm', [ 'name' => 'Yandex.Market' ])) ?>"
     >
-        <?= e(trans('lovata.yandexmarketshopaholic::lang.button.export_catalog_to_xml')) ?>
+        <?= e(trans('logingrupa.facebookcatalogshopaholic::lang.button.export_catalog_to_xml', [ 'name' => 'Yandex.Market' ])) ?>
+    </button>
+    
+    <button
+            type="button"
+            data-request="onGenerateXMLFileFacebookCatalog"
+            class="btn btn-primary "
+            data-request-update="download: '.download-btn-yandex-market'"
+            data-stripe-load-indicator
+            data-request-confirm="<?= e(trans('logingrupa.facebookcatalogshopaholic::lang.message.update_catalog_to_xml_confirm', [ 'name' => 'Facebook.Catalog' ])) ?>"
+    >
+        <?= e(trans('logingrupa.facebookcatalogshopaholic::lang.button.export_catalog_to_xml', [ 'name' => 'Facebook.Catalog' ])) ?>
     </button>
     <div class="download-btn-yandex-market">
         <?= $this->makePartial('download') ?>
     </div>
 </div>
+

@@ -1,11 +1,11 @@
 <?php return [
     'plugin'     => [
-        'name'        => 'Export catalog for Yandex.Market',
-        'description' => 'Generation XML file for integration with Yandex.Market',
+        'name'        => 'Export catalog for Facebook.Catalog',
+        'description' => 'Generation XML file for integration with Facebook.Catalog',
     ],
     'menu'       => [
-        'settings'             => 'Export to Yandex.Market',
-        'settings_description' => 'Configure export catalog to Yandex.Market',
+        'settings'             => 'Export to Facebook.Catalog',
+        'settings_description' => 'Configure Export to Facebook.Catalog',
     ],
     'field'      => [
         'short_store_name'                           => 'Short store name',
@@ -25,20 +25,20 @@
         'field_enable_auto_discounts'                => 'Automatic calculation of discounts',
         'code_model_for_images'                      => 'Get images from:',
         'section_management_additional_fields_offer' => 'Additional fields',
-        'section_yandex_market'                      => 'Yandex.Market',
+        'section_yandex_market'                      => 'Facebook.Catalog',
     ],
     'button'     => [
-        'export_catalog_to_xml' => 'Run export',
-        'download'              => 'Download',
+        'export_catalog_to_xml' => 'Run :name export',
+        'download'              => 'Download :name',
     ],
     'widget'     => [
-        'export_catalog_to_xml_for_yandex_market' => 'Export catalog to Yandex.Market',
+        'export_catalog_to_xml_for_yandex_market' => 'Export to Facebook.Catalog',
     ],
     'permission' => [
-        'yandexmarketsettings' => 'Manage settings of catalog export to Yandex.Market',
+        'yandexmarketsettings' => 'Manage settings of catalog export to Facebook.Catalog',
     ],
     'message'    => [
-        'export_is_completed'           => 'Export completed',
-        'update_catalog_to_xml_confirm' => 'Run export catalog to XML file?',
+        'export_is_completed'           => ':name Export completed',
+        'update_catalog_to_xml_confirm' => 'Run export :name  catalog to XML file?',
     ],
 ];

@@ -1,15 +1,17 @@
-<?php namespace Lovata\YandexMarketShopaholic\Widgets;
+<?php namespace LoginGrupa\FacebookCatalogShopaholic\Widgets;
 
 use Flash;
 use Storage;
 use Backend\Classes\ReportWidgetBase;
-use Lovata\YandexMarketShopaholic\Classes\Helper\ExportCatalogHelper;
-use Lovata\YandexMarketShopaholic\Classes\Helper\GenerateXML;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogHelper;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogFacebookHelper;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXML;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\GenerateXMLForFacebookCatalog;
 
 /**
  * Class ExportToXML
  *
- * @package Lovata\YandexMarketShopaholic\Widgets
+ * @package LoginGrupa\FacebookCatalogShopaholic\Widgets
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
 class ExportToXML extends ReportWidgetBase
@@ -21,7 +23,7 @@ class ExportToXML extends ReportWidgetBase
      */
     public function render()
     {
-        $this->vars['sFileUrl'] = $this->getFileUrl();
+        // $this->vars['sFileUrl'] = $this->getFileUrl();
 
         return $this->makePartial('widget');
     }
@@ -33,10 +35,23 @@ class ExportToXML extends ReportWidgetBase
     {
         $obDataCollection = new ExportCatalogHelper();
         $obDataCollection->run();
+        // \Artisan::call('shopaholic:catalog_export.yandex_market');
+        Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', [ 'name' => 'Yandex.Market' ]));
 
-        Flash::info(trans('lovata.yandexmarketshopaholic::lang.message.export_is_completed'));
+        $this->vars['sFileUrl'] = url('/').'/storage/'.GenerateXML::getFilePath();
+    }
 
-        $this->vars['sFileUrl'] = $this->getFileUrl();
+    /**
+     * Generate xml for yandex market
+     */
+    public function onGenerateXMLFileFacebookCatalog()
+    {
+        $obDataCollection = new ExportCatalogFacebookHelper();
+        $obDataCollection->run();
+        // \Artisan::call('shopaholic:catalog_export.facebook_catalog');
+        Flash::info(trans('logingrupa.facebookcatalogshopaholic::lang.message.export_is_completed', [ 'name' => 'Facebook.Catalog' ]));
+
+        $this->vars['sFileUrl'] = url('/').'/storage/'.GenerateXMLForFacebookCatalog::getFilePath();
     }
 
     /**
@@ -44,16 +59,16 @@ class ExportToXML extends ReportWidgetBase
      *
      * @return string
      */
-    protected function getFileUrl()
-    {
-        $sFilePath = GenerateXML::getFilePath();
-        $sFullFilePath = storage_path($sFilePath);
-        if (!file_exists($sFullFilePath)) {
-            return null;
-        }
+    // protected function getFileUrl()
+    // {
+    //     $sFilePath = GenerateXML::getFilePath();
+    //     $sFullFilePath = storage_path($sFilePath);
+    //     if (!file_exists($sFullFilePath)) {
+    //         return null;
+    //     }
 
-        $sStorageFilePath = Storage::url($sFilePath);
+    //     $sStorageFilePath = url('/').'/storage/'.$sFilePath;
 
-        return $sStorageFilePath;
-    }
+    //     return $sStorageFilePath;
+    // }
 }

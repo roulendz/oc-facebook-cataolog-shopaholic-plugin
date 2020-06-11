@@ -38,7 +38,7 @@
         'yandexmarketsettings' => 'Управление настройками экспорта в Яндекс.Маркет',
     ],
     'message'    => [
-        'export_is_completed'            => 'Экспорт завершен',
-        'update_catalog_to_xml_confirm' => 'Запустить экспорт каталога в XML файл?',
+        'export_is_completed'            => ':name Экспорт завершен',
+        'update_catalog_to_xml_confirm' => 'Запустить :name экспорт каталога в XML файл?',
     ],
 ];

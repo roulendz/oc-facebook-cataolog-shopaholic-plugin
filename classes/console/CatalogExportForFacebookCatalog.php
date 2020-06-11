@@ -1,7 +1,7 @@
 <?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Console;
 
 use Illuminate\Console\Command;
-use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogHelper;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogFacebookHelper;
 
 /**
  * Class CatalogExportForYandexMarket
@@ -9,17 +9,17 @@ use LoginGrupa\FacebookCatalogShopaholic\Classes\Helper\ExportCatalogHelper;
  * @package LoginGrupa\FacebookCatalogShopaholic\Classes\Console
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
-class CatalogExportForYandexMarket extends Command
+class CatalogExportForFacebookCatalog extends Command
 {
     /**
      * @var string command name.
      */
-    protected $name = 'shopaholic:catalog_export.yandex_market';
+    protected $name = 'shopaholic:catalog_export.facebook_catalog';
 
     /**
      * @var string The console command description.
      */
-    protected $description = 'Generate xml file for Facebook.Catalog';
+    protected $description = 'Generate xml file for Facebook.Catalog in sites default language';
 
     /**
      * Execute the console command.
@@ -27,7 +27,7 @@ class CatalogExportForYandexMarket extends Command
      */
     public function handle()
     {
-        $obDataCollection = new ExportCatalogHelper();
+        $obDataCollection = new ExportCatalogFacebookHelper();
         $obDataCollection->run();
     }
 }

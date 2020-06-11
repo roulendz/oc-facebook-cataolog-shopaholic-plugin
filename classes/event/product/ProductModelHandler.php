@@ -1,11 +1,11 @@
-<?php namespace Lovata\YandexMarketShopaholic\Classes\Event\Product;
+<?php namespace LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product;
 
 use Lovata\Shopaholic\Models\Product;
 
 /**
  * Class ProductModelHandler
  *
- * @package Lovata\YandexMarketShopaholic\Classes\Event\Product
+ * @package LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
 class ProductModelHandler

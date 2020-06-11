@@ -1,22 +1,23 @@
-<?php namespace Lovata\YandexMarketShopaholic;
+<?php namespace LoginGrupa\FacebookCatalogShopaholic;
 
 use Event;
 use System\Classes\PluginBase;
 
 // Command
-use Lovata\YandexMarketShopaholic\Classes\Console\CatalogExportForYandexMarket;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Console\CatalogExportForYandexMarket;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Console\CatalogExportForFacebookCatalog;
 
 // Offer event
-use Lovata\YandexMarketShopaholic\Classes\Event\Offer\ExtendOfferFieldsHandler;
-use Lovata\YandexMarketShopaholic\Classes\Event\Offer\OfferModelHandler;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\ExtendOfferFieldsHandler;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Offer\OfferModelHandler;
 // Product event
-use Lovata\YandexMarketShopaholic\Classes\Event\Product\ExtendProductFieldsHandler;
-use Lovata\YandexMarketShopaholic\Classes\Event\Product\ProductModelHandler;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product\ExtendProductFieldsHandler;
+use LoginGrupa\FacebookCatalogShopaholic\Classes\Event\Product\ProductModelHandler;
 
 /**
  * Class Plugin
  *
- * @package Lovata\YandexMarketShopaholic
+ * @package LoginGrupa\FacebookCatalogShopaholic
  * @author  Sergey Zakharevich, s.zakharevich@lovata.com, LOVATA Group
  */
 class Plugin extends PluginBase
@@ -32,11 +33,11 @@ class Plugin extends PluginBase
     {
         return [
             'config'    => [
-                'label'       => 'lovata.yandexmarketshopaholic::lang.menu.settings',
-                'description' => 'lovata.yandexmarketshopaholic::lang.menu.settings_description',
+                'label'       => 'logingrupa.facebookcatalogshopaholic::lang.menu.settings',
+                'description' => 'logingrupa.facebookcatalogshopaholic::lang.menu.settings_description',
                 'category'    => 'lovata.shopaholic::lang.tab.settings',
                 'icon'        => 'icon-upload',
-                'class'       => 'Lovata\YandexMarketShopaholic\Models\YandexMarketSettings',
+                'class'       => 'LoginGrupa\FacebookCatalogShopaholic\Models\YandexMarketSettings',
                 'permissions' => ['shopaholic-menu-yandex-market-export'],
                 'order'       => 9000,
             ],
@@ -48,12 +49,12 @@ class Plugin extends PluginBase
      */
     public function boot()
     {
-        // Offer event
-        Event::subscribe(ExtendOfferFieldsHandler::class);
-        Event::subscribe(OfferModelHandler::class);
-        // Product event
-        Event::subscribe(ExtendProductFieldsHandler::class);
-        Event::subscribe(ProductModelHandler::class);
+        // // Offer event
+        // Event::subscribe(ExtendOfferFieldsHandler::class);
+        // Event::subscribe(OfferModelHandler::class);
+        // // Product event
+        // Event::subscribe(ExtendProductFieldsHandler::class);
+        // Event::subscribe(ProductModelHandler::class);
     }
 
     /**
@@ -61,6 +62,7 @@ class Plugin extends PluginBase
      */
     public function register()
     {
+        $this->registerConsoleCommand('shopaholic:catalog_export.facebook_catalog', CatalogExportForFacebookCatalog::class);
         $this->registerConsoleCommand('shopaholic:catalog_export.yandex_market', CatalogExportForYandexMarket::class);
     }
 
@@ -70,8 +72,8 @@ class Plugin extends PluginBase
     public function registerReportWidgets()
     {
         return [
-            'Lovata\YandexMarketShopaholic\Widgets\ExportToXML' => [
-                'label' => 'lovata.yandexmarketshopaholic::lang.widget.export_catalog_to_xml_for_yandex_market',
+            'LoginGrupa\FacebookCatalogShopaholic\Widgets\ExportToXML' => [
+                'label' => 'logingrupa.facebookcatalogshopaholic::lang.widget.export_catalog_to_xml_for_yandex_market',
             ],
         ];
     }
